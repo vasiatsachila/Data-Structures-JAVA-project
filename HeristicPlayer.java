@@ -2,7 +2,7 @@ package ds8987_8832;
 import java.util.ArrayList;
 import java.lang.Math;
 public class HeristicPlayer extends Player {
- ArrayList<Integer> path = new ArrayList<Integer>();
+ ArrayList<Integer> path = new ArrayList<Integer>();//δομη που αποθηκεύει πληροφορίες απο όλους τους γύρους του παιχνιδιού
 	
 //Basic Constructor
 	public HeristicPlayer() {
@@ -22,46 +22,50 @@ public class HeristicPlayer extends Player {
 		this.path = path;
 	}
 	
-	double[] evaluate(int id,int currentPos, int dice, int  opponetPos) {
-		double[] d = {0.0,0.0,0.0};
-		double d0=0;
-		double NearSupplies = 0.0;
-		double OpponetDist = 0.0;
-		int border = 0;
-		double distS = 0;
-		double distM = 0;
-		boolean wall = false;
-		boolean supply = false;
-		boolean opponet= false;
-		if(dice == 1 ) {
-		int i = currentPos+board.getN();
+	double[] evaluate(int id,int currentPos, int dice, int  opponetPos) {//συναρτηση αξιολογησης της εκάστοτε κίνησης 
+		double[] d = {0.0,0.0,0.0};//αρχικοποίηση πίνακα που επιστρέφει τις πληροφορίες της κίνησης αυτής
+		double d0=0; //μεταβλητή για τους πόντους της κίνσησης
+		double NearSupplies = 0.0; //πόντοι σχετικά με το αν βλέπει εφόδιο ή οχι
+		double OpponetDist = 0.0; //πόντοι σχετικά με το αν βλέπει τον αντίπαλο ή οχι ή οχι
+		int border = 0; // σύνορο- αν υπάρχουν ή όχι 3 πλακάκια να δει 
+		double distS = 0;//αποστασή παίκτη απο εφόδιο
+		double distO = 0;//αποστασή παίκτη απο εφόδιο
+		boolean wall = false;//αν βλέπει τείχος ή οχι
+		boolean supply = false;//αν βλέπει εφόδιο ή όχι
+		boolean opponet= false;//αν βλέπει αντίπαλο ή οχι
+		if(dice == 1 ) {//αν το ζάρι δώσει 1-βόρεια
+		int i = currentPos+board.getN();//το πρώτο πλακάκι που ψάχνει-το διπλανό απο πάνω
+		//αν υπάρχουν 3 πλακίδια προς τα πάνω το όριο είναι το tileId του 3ου προς τα πανώ αλλίως αν βλέπει 2 είναι του 2ου κτλ
 		if(currentPos+3*board.getN()< board.getN()*board.getN()  ) border = currentPos+3*board.getN();
 		else if(currentPos+2*board.getN() <board.getN()*board.getN()  ) border = currentPos+2*board.getN() ;
 		else if(currentPos+board.getN() <board.getN()*board.getN() ) border = currentPos+board.getN() ;
-        while(i<=border && wall != true )  {
-	     distS++;
-	     distM++;
+        while(i<=border && wall != true )  {//όσο βρίσκεται όντως της ορατότητας του και δεν υπάρχει τείχος που τον ενοχλεί
+	    //αυξάνει τις αποστάσεις εφοδίου-αντιπάλου
+         distS++;
+	     distO++;
 	    for(int s=0; s<board.getS(); s++) {
-	    if(supply != true && board.supplies[s].getSupplyTileId() == i ) {
-	    NearSupplies= 1.0/distS;
-	    supply = true;
+	    if(supply != true && board.supplies[s].getSupplyTileId() == i ) {//ψάχνει να βρεί εφόδιο εφοσόν δεν έχει βρεί εφόδιο σε πιο κοντινό πλακάκι
+	    NearSupplies= 1.0/distS;//πόντοι για εφόδιο- όσο πιο κοντά τόσο πίο πολλοί πόντοι
+	    supply = true;//βρήκε εφόδιο
 		}
 	    }
-	    if(  opponet!= true && board.tiles[i].getTileId() == opponetPos) {
-	     OpponetDist = 1.0/distM;
-	     
+	    if(  opponet!= true && board.tiles[i].getTileId() == opponetPos) {//ψάχνει να βρεί τον αντίπαλο εφοσόν δεν έχει βρεί εφόδιο σε πιο κοντινό πλακάκι
+	     OpponetDist = 1.0/distO;//πόντοι για  εύρεση αντιπάλου- όσο πιο κοντά τόσο πίο πολλοί πόντοι
+	     opponet = true;//βρήκε τον αντίπαλο-ουσιαστικα και να μην υπήρχε δεν θα ειχαμε προβλημά γιατι ενας αντίπαλος υπάρχει απλα για να μην ψάχνει άδικα αν έχει βρεθεί
 	    }
-	    if(board.tiles[i].isUp() == true) wall = true;
-		i=i+board.getN();
+	    if(board.tiles[i].isUp() == true) wall = true;//αν το τρέχον τείχος έχει πάνω τείχος δεν ξάνα τρέχει η while γιατι ο παίκτης παύει να χει ορατότητα
+		i=i+board.getN();//πάει στο παραπάνω πλακάκι
 		}
-		}else if(dice == 5 ) {
-		int i = currentPos-board.getN();
+		}else if(dice == 5 ) {//αν το ζάρι δώσει 5- νότια
+		int i = currentPos-board.getN();//το πρώτο πλακάκι που ψάχνει-το διπλανό απο κάτω
+		//αν υπάρχουν 3 πλακίδια προς τα κάτω το όριο είναι το tileId του 3ου προς τα κάτω αλλίως αν βλέπει 2 είναι του 2ου κτλ
 		if(currentPos-3*board.getN() >= 0   ) border = currentPos-3*board.getN();
 		else if(currentPos-2*board.getN() >= 0 ) border = currentPos-2*board.getN()  ;
 		else if(currentPos-board.getN() >= 0  ) border = currentPos-board.getN() ;
-	    while(i>=border && wall != true )  {
+	   //όμοια λογική με παράπάνω απλα τώρα το i-- και η while εκτελείται όσο το i είναι μεγαλύτερο απο το border
+		while(i>=border && wall != true )  {
         distS++;
-        distM++;
+        distO++;
         for(int s=0; s<board.getS(); s++) {
         	if(wall == false && supply != true && board.supplies[s].getSupplyTileId() == i ) {
         	    NearSupplies= 1.0/distS;
@@ -69,44 +73,32 @@ public class HeristicPlayer extends Player {
         		}
         	    }
         	    if( wall == false &&  opponet!= true && board.tiles[i].getTileId() == opponetPos) {
-        	     OpponetDist = 1.0/distM;
-        	     
+        	     OpponetDist = 1.0/distO;
+        	     opponet= true;
         	    }
          if(board.tiles[i].isDown() == true) wall = true;
 		i=i-board.getN();	
 	    }
-		}else if(dice == 3) {
-		int i = currentPos+1;
+		}else if(dice == 3) {//αν το ζάρι δώσεο 3-ανατολικά
+		int i = currentPos+1;//το πρώτο πλακάκι που ψάχνει-το διπλανό απο τα δεξιά
+		//όμοια με πρίν το border ειναι 3 αν υπάρχει 3 πλακάκια να δεξιότερα  αλλίως 2,1 ανάλογα που το πόσα υπάρχουν.
 		if(currentPos+3 <= ((currentPos/board.getN() +1)*board.getN() - 1) ) border = currentPos+3;
 		else if(currentPos+2 <= ((currentPos/board.getN() +1)*board.getN() - 1)  ) border = currentPos+2 ;
 		else if(currentPos+1<= ((currentPos/board.getN() +1)*board.getN() - 1) ) border = currentPos+1 ;
-	    while(i<=border && wall != true )  {
+	   //όμοια λογική -το i εδώ αυξάνεται κατά 1 ώστε να ψάχνει προς τα δεξιά 
+		while(i<=border && wall != true )  {
          distS++;
-	     distM++;
+	     distO++;
 	     for(int s=0; s<board.getS(); s++) {
-	    	 if(distS == 1 && supply != true && board.supplies[s].getSupplyTileId() == i ) {
-	    	     supply = true;
-	    	     NearSupplies= 1;
-	    	    }else if(distS == 2 && supply != true && board.supplies[s].getSupplyTileId() == i  ) {
-	    	     supply = true;
-	    		 NearSupplies= 0.5;
-	    	    }else if(distS == 3 && supply != true && board.supplies[s].getSupplyTileId() == i ) {
-	    		 supply = true;
-	    		 NearSupplies= 0.3;
-	    		}
-	    	    }
-	    	    if(board.tiles[i].getTileId() == opponetPos) {
-	    	    if(distM == 1 &&  opponet!= true) {
-	    	     opponet= true;
-	    	     OpponetDist = 1;
-	    	    }else if(distM == 2 &&  opponet!= true ) {
-	    	     opponet= true;
-	    	     OpponetDist = 0.5;
-	            }else if(distM == 3 &&  opponet!= true ) {
-	             opponet= true;
-	             OpponetDist = 0.3;
-	    	     }
-	    	    }
+	        	if(wall == false && supply != true && board.supplies[s].getSupplyTileId() == i ) {
+	        	    NearSupplies= 1.0/distS;
+	        	    supply = true;
+	        		}
+	        	    }
+	        	    if( wall == false &&  opponet!= true && board.tiles[i].getTileId() == opponetPos) {
+	        	     OpponetDist = 1.0/distO;
+	        	     opponet= true;
+	        	    }
 	    if(board.tiles[i].isRight() == true) wall = true;
 	   	i++;
 		}		
@@ -118,7 +110,7 @@ public class HeristicPlayer extends Player {
 		else if(currentPos-1 >= 0 ) border = currentPos-1 ;
 	    while(i>=border && wall != true )  {
 	    distS++;
-        distM++;
+        distO++;
         for(int s=0; s<board.getS(); s++) {
         	if(wall == false && supply != true && board.supplies[s].getSupplyTileId() == i ) {
         	    NearSupplies= 1.0/distS;
@@ -126,8 +118,8 @@ public class HeristicPlayer extends Player {
         		}
         	    }
         	    if( wall == false &&  opponet!= true && board.tiles[i].getTileId() == opponetPos) {
-        	     OpponetDist = 1.0/distM;
-        	     
+        	     OpponetDist = 1.0/distO;
+        	     opponet=true;
         	    }
         	if(board.tiles[i].isLeft() == true) wall = true;
 		   	i--;
@@ -135,35 +127,31 @@ public class HeristicPlayer extends Player {
    }	
 		
 		
-		if(id==1) {
-		d0=0.4*NearSupplies+0.9*OpponetDist;
-		}else if ( id == 2) {
-		d0=0.4*NearSupplies - 0.9*OpponetDist;//����� �� ����� � S M �� ������� ����� ��� ���� � ���������� �� ��� ���� ������� �� ����� ������� 
+		if(id==1) {//Ο Θησέας έχει (-) στο OpponetDist γιατί θέλει να αποφύγει τον Μινώταυρο 
+		d0=0.4*NearSupplies-0.9*OpponetDist;
+		}else if ( id == 2) {//Ο Μινώταυρος έχει (+) στο OpponetDist γιατί θέλει να πλησιάσει  τον Θησέα 
+		d0=0.4*NearSupplies + 0.9*OpponetDist;
 		}
 		
-		int start = start();
-		if( path.size() >=8 && Math.abs(path.get(start+1)-dice) == 4){//epistrefei sto idio
-		d0=-5;
+		int start = start();//παίρνει την αρχική θέση (με το -1) της τελευταίας κίνησης
+		if( path.size() >1 && Math.abs(path.get(start+1)-dice) == 4){//για κάθε γύρο έκτος απο τον πρώτο ελέγχει αν ο παίκτης πάει να επιστρέψει στην προηγ.θέση
+		d0=-0.1;//δίνει -0.1 ώστε αν υπάρχει δυνάτη καλύτερη επιλογή να προτιμήσει εκείνη 
 		}
-		int[] lastDices = lastDices();
-		int sameDices=0;
-		int repeatDice = 0;
-		for(int k =0; k <4; k++) {
-		 for(int j =0; j <4; j++) {
-			if(lastDices[k] == lastDices[j] && k!=j) {
+		int[] lastDices = lastDices();//επιστρέγει τις τελευταίες 5 τιμές του ζαριού που επιλέχθηκαν-5 τελευταίες κατευθύνσεις 
+		int sameDices=0;//ίδιες κατευθύνσεις
+		for(int k =0; k <5; k++) {
+			if(lastDices[k] == 1) {
 			sameDices++;
-			repeatDice = lastDices[k];
 			}
-		 }
+		 
 		}
-		sameDices = sameDices/2;
-		if(sameDices>=3 && dice == repeatDice && d0 <=0) {
-			d0 = d0-0.1;//�� ������������� ��� ���������� ��� ��� ������ ������ �� ��� ��� ��������������	
+		if(sameDices>=3 && d0 <=0) {
+			d0 = d0-0.1;//αν επαναλαμβάνει μία κατέυθυνση και δεν βλέπει εφόδιο να μην την ξαναπροτιμήσει	
 			}
 		
-		d[0] = d0;
-		d[1] = NearSupplies;
-		d[2] = OpponetDist;
+		d[0] = d0;//τελική πόντοι κίνησης
+		d[1] = NearSupplies;//πόντοι σχετικά με ορατότητα εφοδιών
+		d[2] = OpponetDist;//πόντοι σχετικά με ορατότητα αντιπάλου
 		
 		return d;
 	}
@@ -179,7 +167,7 @@ public class HeristicPlayer extends Player {
 	     if(board.tiles[currentPos].isRight() == true ) eval3[0] = -10;
 	     if(board.tiles[currentPos].isDown() == true ) eval5[0] = -10;
 	     if(board.tiles[currentPos].isLeft() == true ) eval7[0] = -10;
-	     if(id == 1) {//o ������ �������� ���� �� ���� ��� ����� ���� �� ���� �� ������ ��� �� ����� ���� �� ��� � ���������� ����� �� ��� ���� ������ ��� �� �������
+	     if(id == 1) {//o Θησεας κινειται προς τα πανω και δεξια ώστε να βρει τα εφοδια και ας ειναι προς τα παν ο Μινωταυρος γιατι αν δεν βρει εφόδια δεν θα νικησει
 	      if(eval1[0]>=eval3[0] && eval1[0] >= eval5[0] && eval1[0] >=eval7[0]) {
 		     eval=eval1;
 		   	 dice=1;
@@ -194,7 +182,7 @@ public class HeristicPlayer extends Player {
 	    	 eval=eval5;
 	    	 dice=5;
 	       }
-	     }else if (id == 2) {//o ���������� ������� ���� �������� ����� ���� ��������� ������  � ������
+	     }else if (id == 2) {//o Μινωταθρος προτιμα κατω αριστερα γιατι εκει βρισκεται αρχικα  ο Θησεας
 	    	 if(eval5[0]>=eval1[0] && eval5[0]>=eval3[0] && eval5[0]>=eval7[0]) {
 	    			
 		    	 eval=eval5;
@@ -214,25 +202,25 @@ public class HeristicPlayer extends Player {
 	     int point = 0;
 	     int[] move = move(id,dice);
 	     newTile = move[0];
-	     path.add(dice);//1 ����
+	     path.add(dice);//1 ζαρι
 	     point = 0;
-	     path.add(point);//2������
-	     path.add(newTile);//3 ������
-	     path.add(opponetPos);//4 ����������
-	     if(eval[1] == 1 && eval[0] >0 ) path.add(1);//5 ���� � ��� ������ 
+	     path.add(point);//2ποντοι
+	     path.add(newTile);//3 θησεας
+	     path.add(opponetPos);//4 μινωταυρος
+	     if(eval[1] == 1 && eval[0] >0 ) path.add(1);//5 πηρε ή οχι εφοδιο 
 	     else  path.add(0);
-	     if(eval[1] ==0) path.add(0); //6 �� ������ ������
+	     if(eval[1] ==0) path.add(0); //6 αν εβλεπε εφοδιο
 	     else path.add(1);
-	     if(eval[2] ==0) path.add(0); //7 �� ������ ��������� 
+	     if(eval[2] ==0) path.add(0); //7 αν εβλεπε μονωταυρο 
 	     else path.add(1);
-	     if(eval[1] == 0.3) path.add(3);//8 �������� ��� ������ �� ������
+	     if(eval[1] == 0.3) path.add(3);//8 αποσταση απο εφοδιο αν εβλεπε
 	     else if(eval[1] == 0.5) path.add(2);
 	     else if(eval[1] == 1) path.add(1);
-	     if(eval[2] == -0.3) path.add(3);//9o �������� ��� ��������� �� ������-�� ��� ������ ������ ��� ������ ��������� �� ��� 8�
+	     if(eval[2] == -0.3) path.add(3);//9o αποσταση απο μινωταυρο αν εβλεπε-αν δεν εβλεπε εφοδιο και εβλεπε μινωταυρο θα ταν 8ο
 	     else if(eval[2] == -0.5) path.add(2);
 	     else if(eval[2] == -1) path.add(1);
 	   
-	     path.add(-1);//10� ��� �� �������� ��� �������
+	     path.add(-1);//10ο για να ξεχωριζω οτι εκλεισε
 	    // System.out.println("1= "+eval1[0]+" 3= "+eval3[0]+" 5= "+eval5[0]+" 7= "+eval7[0]);
 	     return newTile;
 		}
@@ -280,10 +268,10 @@ public class HeristicPlayer extends Player {
 		
           start = start();	
 			//if(path.get(start+5 ) == 1) System.out.println("Tooks prizes!!!!");
-			if(path.get(start+6) == 1) {//�� ������ ������ ��������� ��������
+			if(path.get(start+6) == 1) {//αν ρβλεπε εφοδιο εκτυπωνει αποσταση
 			System.out.println("Distance from prize is "+path.get(start+8));
-			if(path.get(start+7) == 1) System.out.println("Distance from minotaur is "+path.get(start + 9));//������ ��� ������ ��� ���������
-			}else{//��� ������ ������
+			if(path.get(start+7) == 1) System.out.println("Distance from minotaur is "+path.get(start + 9));//εβλεπε και εφοδιο και μινωταυρο
+			}else{//δεν εβλεπε εφοδιο
 			if(path.get(start+7) == 1) System.out.println("Distance from minotaur is "+path.get(start+ 8)); 
 			}
 
