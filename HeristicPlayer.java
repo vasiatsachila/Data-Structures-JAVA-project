@@ -81,7 +81,7 @@ public class HeristicPlayer extends Player {
 	    }
 		}else if(dice == 3) {//αν το ζάρι δώσεο 3-ανατολικά
 		int i = currentPos+1;//το πρώτο πλακάκι που ψάχνει-το διπλανό απο τα δεξιά
-		//όμοια με πρίν το border ειναι 3 αν υπάρχει 3 πλακάκια να δεξιότερα  αλλίως 2,1 ανάλογα που το πόσα υπάρχουν.
+		//όμοια με πρίν το border ειναι 3 αν υπάρχουν 3 πλακάκια  δεξιότερα  αλλίως 2,1 ανάλογα που το πόσα υπάρχουν.
 		if(currentPos+3 <= ((currentPos/board.getN() +1)*board.getN() - 1) ) border = currentPos+3;
 		else if(currentPos+2 <= ((currentPos/board.getN() +1)*board.getN() - 1)  ) border = currentPos+2 ;
 		else if(currentPos+1<= ((currentPos/board.getN() +1)*board.getN() - 1) ) border = currentPos+1 ;
@@ -103,11 +103,13 @@ public class HeristicPlayer extends Player {
 	   	i++;
 		}		
 			
-		}else if(dice == 7) {
-		int i = currentPos-1;
+		}else if(dice == 7) {//αν το ζάρι δώσεο 7-δυτικοτερα
+		int i = currentPos-1;//το πρώτο πλακάκι που ψάχνει - το διπλανο απο τα αριστερα
+		//όμοια με πρίν το border ειναι 3 αν υπάρχουν 3 πλακάκια  αριστερα  αλλίως 2,1 ανάλογα που το πόσα υπάρχουν.
 		if(currentPos-3 >= 0 ) border = currentPos-3;
 		else if(currentPos-2 >= 0 ) border = currentPos-2 ;
 		else if(currentPos-1 >= 0 ) border = currentPos-1 ;
+	//όμοια λογική -το i εδώ μειώνεται κατά 1 ώστε να ψάχνει προς τα αριστερα 
 	    while(i>=border && wall != true )  {
 	    distS++;
         distO++;
@@ -156,18 +158,18 @@ public class HeristicPlayer extends Player {
 		return d;
 	}
 	int getNextMove(int id,int currentPos,int opponetPos) {
-	     int newTile= currentPos;
-	     int dice = 0;
-	     double[] eval = {0,0,0,0};
-	     double[] eval1 = evaluate(id,currentPos,1,opponetPos);
-	     double[] eval3 = evaluate(id,currentPos,3,opponetPos);
-	     double[] eval5 = evaluate(id,currentPos,5,opponetPos);
-	     double[] eval7 = evaluate(id,currentPos,7,opponetPos);
-	     if(board.tiles[currentPos].isUp() == true ) eval1[0] = -10;
-	     if(board.tiles[currentPos].isRight() == true ) eval3[0] = -10;
-	     if(board.tiles[currentPos].isDown() == true ) eval5[0] = -10;
-	     if(board.tiles[currentPos].isLeft() == true ) eval7[0] = -10;
-	     if(id == 1) {//o Θησεας κινειται προς τα πανω και δεξια ώστε να βρει τα εφοδια και ας ειναι προς τα παν ο Μινωταυρος γιατι αν δεν βρει εφόδια δεν θα νικησει
+	     int newTile= currentPos;//νέο πλακάκι
+	     int dice = 0;//η τιμη του ζαριου-κατεύθυνση
+	     double[] eval = {0,0,0,0};//τελικός πίνακας
+	     double[] eval1 = {-100,-100,-100,-100};
+	     double[] eval3 = {-100,-100,-100,-100};
+	     double[] eval5 = {-100,-100,-100,-100};
+	     double[] eval7 =  {-100,-100,-100,-100};
+	     if(board.tiles[currentPos].isUp() == false )  eval1 = evaluate(id,currentPos,1,opponetPos);
+	     if(board.tiles[currentPos].isRight() == false ) eval3 = evaluate(id,currentPos,3,opponetPos);
+	     if(board.tiles[currentPos].isDown() ==false )  eval5 = evaluate(id,currentPos,5,opponetPos);
+	     if(board.tiles[currentPos].isLeft() == false )  eval7 = evaluate(id,currentPos,7,opponetPos);
+	     if(id == 1) {//o Θησεας κινειται με προτεραιοτητα προς τα πανω και δεξια ώστε να βρει τα εφοδια και ας ειναι προς τα παν ο Μινωταυρος γιατι αν δεν βρει εφόδια δεν θα νικησει
 	      if(eval1[0]>=eval3[0] && eval1[0] >= eval5[0] && eval1[0] >=eval7[0]) {
 		     eval=eval1;
 		   	 dice=1;
@@ -200,14 +202,14 @@ public class HeristicPlayer extends Player {
 	     }
 	        
 	     int point = 0;
-	     int[] move = move(id,dice);
-	     newTile = move[0];
-	     path.add(dice);//1 ζαρι
+	     int[] move = move(id,dice);//κινεί τον παίκτη
+	     newTile = move[0];//νέο πλακίδιο
+	     path.add(dice);//1ο ζαρι-κατεύθυνση
 	     point = 0;
-	     path.add(point);//2ποντοι
-	     path.add(newTile);//3 θησεας
-	     path.add(opponetPos);//4 μινωταυρος
-	     if(eval[1] == 1 && eval[0] >0 ) path.add(1);//5 πηρε ή οχι εφοδιο 
+	     path.add(point);//2ο ποντοι
+	     path.add(newTile);//3ο θησεας(μινώταυρος)
+	     path.add(opponetPos);//4ο μινωταυρος((θησέας)
+	     if(eval[1] == 1 && eval[0] >0 ) path.add(1);//5 πηρε ή οχι εφοδιο -για id 2 πάντα 0
 	     else  path.add(0);
 	     if(eval[1] ==0) path.add(0); //6 αν εβλεπε εφοδιο
 	     else path.add(1);
@@ -222,15 +224,15 @@ public class HeristicPlayer extends Player {
 	   
 	     path.add(-1);//10ο για να ξεχωριζω οτι εκλεισε
 	    // System.out.println("1= "+eval1[0]+" 3= "+eval3[0]+" 5= "+eval5[0]+" 7= "+eval7[0]);
-	     return newTile;
+	     return newTile;//επιστρέφει νέο πλακίδιο
 		}
-	public int start() {
-		int start=-2;
-		int t=path.size()-11;
-		if (path.size() <12) t=0;
-	for(int  i =path.size()-8;  i >=t; i--) {
+	public int start() {//επιστρέφει τη θέση που  θα διαχωρίζει τις εγγραφές δύο διαδοχικών κινήσεων-σημείο εκκίνησης νέας εγγραφής.
+		int start=-2;//αρχικοποίηση
+		int t=path.size()-11;//max μέγεθος κινησής 10+1(path(0,-1))
+		if (path.size() <12) t=0;//αν πρόκειται για την πρώτη κίνηση κάθε παίκτη 
+	for(int  i =path.size()-8;  i >=t; i--) {//min μέγεθος 7+1 άρα ψάχνει απο 8 και κάτω ώστε να βρεί -1 (σημείο τέλους-αρχής)
 		if(path.get(i) == -1) {
-			start = i;
+			start = i;//παίρνει την θέση όπου ξεκίνάνε οι εγγραφές της κίνησης
 		}
 	}
 	return start;
@@ -239,17 +241,18 @@ public class HeristicPlayer extends Player {
 		int[] lastDices = {0,0,0,0,0};
 		int start=-2;
 		int j=0;
-		if(j<5) {
-		for(int  i =path.size()-8;  i >=0; i--) {
+		if(j<5) {//για 5 κινήσεις
+		for(int  i =path.size()-8;  i >=0; i--) { //απο 8 και κάτω γιατι είναι το ελάχιστο μέγεθός εγγραφών κίνησς-πριν δεν υπάρχει πιθανοτητα να βρω -1
 			if(path.get(i) == -1) {
-				start = i;
+				start = i;//βρησκω τη θέση διαχωρισμού 
 			}
-			if(start != -2) {
-			lastDices[j] = path.get(start+1);
-			start=-2;
+			if(start != -2) {//αν έχει βρεί θέση διαχωρισμού
+			lastDices[j] = path.get(start+1);//αποθηκεύει στον πίνακα την τιμή του ζαριού που επιλέχθηκε
+			start=-2;//αλλαζει την τιμή του start ώστε να ψάξει για εγγραφές προηγούμενης κίνησης
 			}
 			
 		}
+		j++;//αυξάνει το j- μετρά πόσες κινήσεις έχει ελέγξει μέχρι τώρα
 		}
 		return lastDices;
 		
