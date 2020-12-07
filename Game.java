@@ -1,7 +1,7 @@
 package ds8987_8832;
 
 public class Game {
-	int round;//γύρος παιχνιδιού
+	int round;//Ξ³ΟΟΞΏΟ‚ Ο€Ξ±ΞΉΟ‡Ξ½ΞΉΞ΄ΞΉΞΏΟ
 
 	//Basic Constructor
 	public Game() {
@@ -27,45 +27,26 @@ public class Game {
 
 
    public static void main(String[] args) {
-	Game game = new Game();//δημιουργώ ένα αντικείμενο παιχνίδι
-	Board b = new Board(15,4,338);//δημιουργώ ενα αντικείμενο ταμπλό δίνοντας τα κατάλληλα ορίσματα βάσει της εκφώνησης
-	b.createBoard();// δημιουργεί το ταμπλό καλώντας τις συναρτήσσεις createTile και createSupply
-	//Player p1 =  new Player(1,"thiseus",b,0,0,0);//Θησέας -(0,0)
-	HeristicPlayer p1 = new  HeristicPlayer ();
-	HeristicPlayer p2 = new  HeristicPlayer ();
-	p1.name="theseus";
-	p1.board=b;
-	p1.playerId=1;
-	p1.x=0;
-	p1.y=0;
-	p1.score=0;
-	p1.name="theseus";
-	p1.board=b;
-	p1.playerId=1;
-	p1.x=0;
-	p1.y=0;
-	p1.score=0;
+	Game game = new Game();//Ξ΄Ξ·ΞΌΞΉΞΏΟ…ΟΞ³Ο Ξ­Ξ½Ξ± Ξ±Ξ½Ο„ΞΉΞΊΞµΞ―ΞΌΞµΞ½ΞΏ Ο€Ξ±ΞΉΟ‡Ξ½Ξ―Ξ΄ΞΉ
+	Board b = new Board(15,4,338);//Ξ΄Ξ·ΞΌΞΉΞΏΟ…ΟΞ³Ο ΞµΞ½Ξ± Ξ±Ξ½Ο„ΞΉΞΊΞµΞ―ΞΌΞµΞ½ΞΏ Ο„Ξ±ΞΌΟ€Ξ»Ο Ξ΄Ξ―Ξ½ΞΏΞ½Ο„Ξ±Ο‚ Ο„Ξ± ΞΊΞ±Ο„Ξ¬Ξ»Ξ»Ξ·Ξ»Ξ± ΞΏΟΞ―ΟƒΞΌΞ±Ο„Ξ± Ξ²Ξ¬ΟƒΞµΞΉ Ο„Ξ·Ο‚ ΞµΞΊΟ†ΟΞ½Ξ·ΟƒΞ·Ο‚
+	b.createBoard();// Ξ΄Ξ·ΞΌΞΉΞΏΟ…ΟΞ³ΞµΞ― Ο„ΞΏ Ο„Ξ±ΞΌΟ€Ξ»Ο ΞΊΞ±Ξ»ΟΞ½Ο„Ξ±Ο‚ Ο„ΞΉΟ‚ ΟƒΟ…Ξ½Ξ±ΟΟ„Ξ®ΟƒΟƒΞµΞΉΟ‚ createTile ΞΊΞ±ΞΉ createSupply
+	//Player p1 =  new Player(1,"thiseus",b,0,0,0);//ΞΞ·ΟƒΞ­Ξ±Ο‚ -(0,0)
+	HeuristicPlayer p1 = new  HeuristicPlayer (1,"theseus",b,0,0,0,-1);
+	HeuristicPlayer p2 = new  HeuristicPlayer (2,"minotaur",b,0,b.getN()/2,b.getN()/2,-1);
+	
 	int theseusTile =0;
-	p2.name="minotaur";
-	p2.board=b;
-	p2.playerId=2;
-	p2.x=b.getN()/2;
-	p2.y=b.getN()/2;
-	p2.score=0;
+	//boolean ga = true;
 	int minotaurTile= (b.getN()*b.getN()-1)/2;
-	String[][] x = b.getStringRepresentation(0, 112);//σχηματοποιει το αρχικό ταμπλό
-	int[] moveM = new int[4];
-		
-	boolean  g= true;
+	String[][] x = b.getStringRepresentation(0, 112);//ΟƒΟ‡Ξ·ΞΌΞ±Ο„ΞΏΟ€ΞΏΞΉΞµΞΉ Ο„ΞΏ Ξ±ΟΟ‡ΞΉΞΊΟ Ο„Ξ±ΞΌΟ€Ξ»Ο
 	
 	int lastTileM=(b.getN()*b.getN()-1)/2;
 	int lastTileT= 0;
 	// HeuristicPlayer p3 = new HeuristicPlayer(0);
 	while(game.round <200 && theseusTile!=minotaurTile && p1.score<4  ) {
-		game.round++;//πρώτος γύρος
-		if(game.round%2==0 ) {//για εναλλαξ παιχνιδι-ζυγα=Μινώταυρος
-		minotaurTile = p2.getNextMove(2,minotaurTile,theseusTile);//κινεί τον Μινώταυρο;
-		  //εκτυπωνω κατάλληλο μήνυμα ανάλογα την κίνηση 
+		game.round++;//Ο€ΟΟΟ„ΞΏΟ‚ Ξ³ΟΟΞΏΟ‚
+		if(game.round%2==0 ) {//Ξ³ΞΉΞ± ΞµΞ½Ξ±Ξ»Ξ»Ξ±ΞΎ Ο€Ξ±ΞΉΟ‡Ξ½ΞΉΞ΄ΞΉ-Ξ¶Ο…Ξ³Ξ±=ΞΞΉΞ½ΟΟ„Ξ±Ο…ΟΞΏΟ‚
+		minotaurTile = p2.getNextMove(minotaurTile,theseusTile);//ΞΊΞΉΞ½ΞµΞ― Ο„ΞΏΞ½ ΞΞΉΞ½ΟΟ„Ξ±Ο…ΟΞΏ;
+		  //ΞµΞΊΟ„Ο…Ο€Ο‰Ξ½Ο‰ ΞΊΞ±Ο„Ξ¬Ξ»Ξ»Ξ·Ξ»ΞΏ ΞΌΞ®Ξ½Ο…ΞΌΞ± Ξ±Ξ½Ξ¬Ξ»ΞΏΞ³Ξ± Ο„Ξ·Ξ½ ΞΊΞ―Ξ½Ξ·ΟƒΞ· 
 		  if(minotaurTile  == (lastTileM-1) ){
           System.out.println(p2.name+ "moves to the left");
 		  }else if(minotaurTile  == (lastTileM+1)) {
@@ -76,9 +57,9 @@ public class Game {
 		  System.out.println(p2.name+" moves upwards");
 		  }
 		lastTileM = minotaurTile;
-		}else if(game.round%2 !=0){//μονα=Θησέας
-		  theseusTile = p1.getNextMove(1,theseusTile,minotaurTile);
-		   //εκτυπωνω κατάλληλο μήνυμα ανάλογα την κίνηση
+		}else if(game.round%2 !=0){//ΞΌΞΏΞ½Ξ±=ΞΞ·ΟƒΞ­Ξ±Ο‚
+		  theseusTile = p1.getNextMove(theseusTile,minotaurTile);
+		   //ΞµΞΊΟ„Ο…Ο€Ο‰Ξ½Ο‰ ΞΊΞ±Ο„Ξ¬Ξ»Ξ»Ξ·Ξ»ΞΏ ΞΌΞ®Ξ½Ο…ΞΌΞ± Ξ±Ξ½Ξ¬Ξ»ΞΏΞ³Ξ± Ο„Ξ·Ξ½ ΞΊΞ―Ξ½Ξ·ΟƒΞ·
 		  if(theseusTile  == (lastTileT-1) ){
 	          System.out.println(p1.name+ "moves to the left");
 			  }else if(theseusTile  == (lastTileT+1)) {
@@ -89,13 +70,12 @@ public class Game {
 			  System.out.println(p1.name+" moves upwards");
 			  }
 		   lastTileT= theseusTile;
-		   b=p1.board;//αναννεώνει τον ταμπλό(αν έχε πιάσει εφόδιο τότε αυτό διαγράφεται απο το ταμπλό)
-		   p1.statistics();
+		   b=p1.board;//Ξ±Ξ½Ξ±Ξ½Ξ½ΞµΟΞ½ΞµΞΉ Ο„ΞΏΞ½ Ο„Ξ±ΞΌΟ€Ξ»Ο(Ξ±Ξ½ Ξ­Ο‡Ξµ Ο€ΞΉΞ¬ΟƒΞµΞΉ ΞµΟ†ΟΞ΄ΞΉΞΏ Ο„ΟΟ„Ξµ Ξ±Ο…Ο„Ο Ξ΄ΞΉΞ±Ξ³ΟΞ¬Ο†ΞµΟ„Ξ±ΞΉ Ξ±Ο€ΞΏ Ο„ΞΏ Ο„Ξ±ΞΌΟ€Ξ»Ο)
 		   }
-	 x = b.getStringRepresentation(theseusTile, minotaurTile);	//δημιουργεί το τρέχον ταμπλό προς εκτύπωση
-	 System.out.println("ROUND IS "+game.round);//εκτυπώνει το ταμπλό
+	 x = b.getStringRepresentation(theseusTile, minotaurTile);	//Ξ΄Ξ·ΞΌΞΉΞΏΟ…ΟΞ³ΞµΞ― Ο„ΞΏ Ο„ΟΞ­Ο‡ΞΏΞ½ Ο„Ξ±ΞΌΟ€Ξ»Ο Ο€ΟΞΏΟ‚ ΞµΞΊΟ„ΟΟ€Ο‰ΟƒΞ·
+	 System.out.println("ROUND IS "+game.round);//ΞµΞΊΟ„Ο…Ο€ΟΞ½ΞµΞΉ Ο„ΞΏ Ο„Ξ±ΞΌΟ€Ξ»Ο
 	 
-	 String[] y = new String[2*b.getN()+1];//δημιουργεί εναν πινάκα 2*15+1 ώστε να εμφανιστούν όλες οι γραμμές του ταμπλό
+	 String[] y = new String[2*b.getN()+1];//Ξ΄Ξ·ΞΌΞΉΞΏΟ…ΟΞ³ΞµΞ― ΞµΞ½Ξ±Ξ½ Ο€ΞΉΞ½Ξ¬ΞΊΞ± 2*15+1 ΟΟƒΟ„Ξµ Ξ½Ξ± ΞµΞΌΟ†Ξ±Ξ½ΞΉΟƒΟ„ΞΏΟΞ½ ΟΞ»ΞµΟ‚ ΞΏΞΉ Ξ³ΟΞ±ΞΌΞΌΞ­Ο‚ Ο„ΞΏΟ… Ο„Ξ±ΞΌΟ€Ξ»Ο
 	 for(int w=0; w <2*b.getN()+1; w++) {
 			y[w]="";
 		}
@@ -106,26 +86,20 @@ public class Game {
 		System.out.println(y[i]);	
 	}
    }
-	 // ο παίκτης κέρδισε μαζεύοντας όλα τα εφόδια
-	 // στην ειδική περίπτωση που  ο Μινωταυρος είναι σε πλακάκι με εφόδιο και ο Θησέας έχει μαζέψει 3 εφόδια
-	 //και πάει στο πλακάκι του Μινωταυρου με το τελευταίο εφόδιο το μαζεύει και νικάει 
-	//άρα για αυτό μπαίνει ο έλεγχός το σκορ πρώτος!
-     if(p1.score==4){
+  p1.statistics();
+  p2.statistics();   
+ 
+  // ΞΏ Ο€Ξ±Ξ―ΞΊΟ„Ξ·Ο‚ ΞΊΞ­ΟΞ΄ΞΉΟƒΞµ ΞΌΞ±Ξ¶ΞµΟΞΏΞ½Ο„Ξ±Ο‚ ΟΞ»Ξ± Ο„Ξ± ΞµΟ†ΟΞ΄ΞΉΞ±
+	 // ΟƒΟ„Ξ·Ξ½ ΞµΞΉΞ΄ΞΉΞΊΞ® Ο€ΞµΟΞ―Ο€Ο„Ο‰ΟƒΞ· Ο€ΞΏΟ…  ΞΏ ΞΞΉΞ½Ο‰Ο„Ξ±Ο…ΟΞΏΟ‚ ΞµΞ―Ξ½Ξ±ΞΉ ΟƒΞµ Ο€Ξ»Ξ±ΞΊΞ¬ΞΊΞΉ ΞΌΞµ ΞµΟ†ΟΞ΄ΞΉΞΏ ΞΊΞ±ΞΉ ΞΏ ΞΞ·ΟƒΞ­Ξ±Ο‚ Ξ­Ο‡ΞµΞΉ ΞΌΞ±Ξ¶Ξ­ΟΞµΞΉ 3 ΞµΟ†ΟΞ΄ΞΉΞ±
+	 //ΞΊΞ±ΞΉ Ο€Ξ¬ΞµΞΉ ΟƒΟ„ΞΏ Ο€Ξ»Ξ±ΞΊΞ¬ΞΊΞΉ Ο„ΞΏΟ… ΞΞΉΞ½Ο‰Ο„Ξ±Ο…ΟΞΏΟ… ΞΌΞµ Ο„ΞΏ Ο„ΞµΞ»ΞµΟ…Ο„Ξ±Ξ―ΞΏ ΞµΟ†ΟΞ΄ΞΉΞΏ Ο„ΞΏ ΞΌΞ±Ξ¶ΞµΟΞµΞΉ ΞΊΞ±ΞΉ Ξ½ΞΉΞΊΞ¬ΞµΞΉ 
+	//Ξ¬ΟΞ± Ξ³ΞΉΞ± Ξ±Ο…Ο„Ο ΞΌΟ€Ξ±Ξ―Ξ½ΞµΞΉ ΞΏ Ξ­Ξ»ΞµΞ³Ο‡ΟΟ‚ Ο„ΞΏ ΟƒΞΊΞΏΟ Ο€ΟΟΟ„ΞΏΟ‚!
+  if(p1.score==4){
 	 System.out.println("Theseus is winner!!!");
-     }else if( minotaurTile == theseusTile) {
-     
-     System.out.println("Minotaur is winner!!!"); 
-	}else if(game.round == 200) {//το round=200 στο τέλος επειδή μπορεί στον 200οστο γύρο να έχει καλυφθεί 
-	 System.out.println("The game was a draw"+p1.score);  // μια απο τις παραπάνω συνθήκες και να υπάρχει νικητής.
-	
+  }else if( minotaurTile == theseusTile) {
+  System.out.println("Minotaur is winner!!!"); 
+	}else if(game.round == 200) {//Ο„ΞΏ round=200 ΟƒΟ„ΞΏ Ο„Ξ­Ξ»ΞΏΟ‚ ΞµΟ€ΞµΞΉΞ΄Ξ® ΞΌΟ€ΞΏΟΞµΞ― ΟƒΟ„ΞΏΞ½ 200ΞΏΟƒΟ„ΞΏ Ξ³ΟΟΞΏ Ξ½Ξ± Ξ­Ο‡ΞµΞΉ ΞΊΞ±Ξ»Ο…Ο†ΞΈΞµΞ― 
+	 System.out.println("The game was a draw");  // ΞΌΞΉΞ± Ξ±Ο€ΞΏ Ο„ΞΉΟ‚ Ο€Ξ±ΟΞ±Ο€Ξ¬Ξ½Ο‰ ΟƒΟ…Ξ½ΞΈΞ®ΞΊΞµΟ‚ ΞΊΞ±ΞΉ Ξ½Ξ± Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ Ξ½ΞΉΞΊΞ·Ο„Ξ®Ο‚.
 	}	
-     
-     p1.x = -1;
-     p1.statistics();
-     
-     
-  
-  
-   }
 
+}
 }
