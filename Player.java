@@ -88,8 +88,8 @@ public void setY(int y) {
 	this.y = y;
 }
 	
-public int[] move(int id, int dice) {
-	//αρχικοποίηση του πίνακα με τιμές μη αποδεκτές ώστε να αποδειχθεί οτι η ανάθεση γίνεται για κάθε περίπτωση
+public int[] move( int dice) {
+	//Ξ±ΟΟ‡ΞΉΞΊΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ· Ο„ΞΏΟ… Ο€Ξ―Ξ½Ξ±ΞΊΞ± ΞΌΞµ Ο„ΞΉΞΌΞ­Ο‚ ΞΌΞ· Ξ±Ο€ΞΏΞ΄ΞµΞΊΟ„Ξ­Ο‚ ΟΟƒΟ„Ξµ Ξ½Ξ± Ξ±Ο€ΞΏΞ΄ΞµΞΉΟ‡ΞΈΞµΞ― ΞΏΟ„ΞΉ Ξ· Ξ±Ξ½Ξ¬ΞΈΞµΟƒΞ· Ξ³Ξ―Ξ½ΞµΟ„Ξ±ΞΉ Ξ³ΞΉΞ± ΞΊΞ¬ΞΈΞµ Ο€ΞµΟΞ―Ο€Ο„Ο‰ΟƒΞ·
 	int[] play = new int[4];
 	for(int  m = 0; m < 4; m++ ) {
 		play[m] = -1;
@@ -100,37 +100,35 @@ public int[] move(int id, int dice) {
 	
 	
     int tile =0;
-    //βρισκεί το  τρέχον πλακάκι του παίκτη 
+    //Ξ²ΟΞΉΟƒΞΊΞµΞ― Ο„ΞΏ  Ο„ΟΞ­Ο‡ΞΏΞ½ Ο€Ξ»Ξ±ΞΊΞ¬ΞΊΞΉ Ο„ΞΏΟ… Ο€Ξ±Ξ―ΞΊΟ„Ξ· 
 	for(int t=0; t <board.getN()*board.getN(); t++) {
 		 if( board.tiles[t].getX()==getX() && board.tiles[t].getY()== getY()) {
 		tile = board.tiles[t].getTileId() ;
-		 next_tile = tile;//σε περίπτωση που δεν κινηθεί να επιστρέψει το ίδιο πλακάκι
+		 next_tile = tile;
 		 }
 	    }
-	//για  κίνηση προς τα πάνω
-	if(dice==1 && board.tiles[tile].isUp() == false){//αν δεν έχει τείχος βόρεια
+	//Ξ³ΞΉΞ±  ΞΊΞ―Ξ½Ξ·ΟƒΞ· Ο€ΟΞΏΟ‚ Ο„Ξ± Ο€Ξ¬Ξ½Ο‰
+	if(dice==1 ){
 	setY(getY()+1);
-	next_tile =next_tile+board.getN();//ανεβαίνει στο πάνω πλακάκι
-	if(id==1) {//αν παίζει ο Θησέας
-	for(int s=0; s < board.getS(); s++) {// ψάχνει να βρεί αν υπάρχει εφόδιο στο νέο πλακάκι
-	  if(board.supplies[s].getSupplyTileId() == next_tile) {
-	     board.supplies[s].setX(0);
-	     board.supplies[s].setY(0);
-	     board.supplies[s].setSupplyTileId(-1);// δινεί τιμή -1 ώστε να μην υπάρχει τέτοιο πλακάκι και να μην ξανα εμφανιστει στο ταμπλό
-	     System.out.println("Player took a prize"+s);
-	     play[3] = board.supplies[s].getSupplyId() ;//το εφόδιο του id αν το έπιασε
-	     this.score++;//αυξάνει το σκόρ
-	  }
-     }
-	}
-	}else if(dice==1 && board.getTiles()[tile].isUp() == true) {//αν έχει τείχος η κίνηση δεν είναι δυνατή
-	System.out.println(name+" cannot move");
-	//για κίνηση προς τα δεξια
-	//όμοια λογική με την κίνηση προς τα πάνω
-	}else if(dice==3 && board.tiles[tile].isRight() == false){
+	next_tile =next_tile+board.getN();//Ξ±Ξ½ΞµΞ²Ξ±Ξ―Ξ½ΞµΞΉ ΟƒΟ„ΞΏ Ο€Ξ¬Ξ½Ο‰ Ο€Ξ»Ξ±ΞΊΞ¬ΞΊΞΉ
+	//Ξ³ΞΉΞ± ΞΊΞ―Ξ½Ξ·ΟƒΞ· Ο€ΟΞΏΟ‚ Ο„Ξ± Ξ΄ΞµΞΎΞΉΞ±
+	//ΟΞΌΞΏΞΉΞ± Ξ»ΞΏΞ³ΞΉΞΊΞ® ΞΌΞµ Ο„Ξ·Ξ½ ΞΊΞ―Ξ½Ξ·ΟƒΞ· Ο€ΟΞΏΟ‚ Ο„Ξ± Ο€Ξ¬Ξ½Ο‰
+	}else if(dice==3 ){
 	 setX(getX()+1);
-	 next_tile++;//διπλανο απο δεξιά πλακάκι
-	 if(id==1) {
+	 next_tile++;//Ξ΄ΞΉΟ€Ξ»Ξ±Ξ½ΞΏ Ξ±Ο€ΞΏ Ξ΄ΞµΞΎΞΉΞ¬ Ο€Ξ»Ξ±ΞΊΞ¬ΞΊΞΉ
+    // Ξ³ΞΉΞ± ΞΊΞ―Ξ½Ξ·ΟƒΞ· Ο€ΟΞΏΟ‚ Ο„Ξ± ΞΊΞ¬Ο„Ο‰
+    //ΟΞΌΞΏΞΉΞ± Ξ»ΞΏΞ³ΞΉΞΊΞ® ΞΌΞµ Ο„Ξ·Ξ½ ΞΊΞ―Ξ½Ξ·ΟƒΞ· Ο€ΟΞΏΟ‚ Ο„Ξ± Ο€Ξ¬Ξ½Ο‰
+	}else if(dice==5 ){
+	setY(getY()-1);
+	next_tile=next_tile-board.getN();// Ο€Ξ¬ΞµΞΉ ΟƒΟ„ΞΏ  Ξ±Ο€ΞΏ ΞΊΞ¬Ο„Ο‰ Ο€Ξ»Ξ±ΞΊΞ¬ΞΊΞΉ
+    //ΟΞΌΞΏΞΉΞ± Ξ»ΞΏΞ³ΞΉΞΊΞ® ΞΌΞµ Ο„Ξ·Ξ½ ΞΊΞ―Ξ½Ξ·ΟƒΞ· Ο€ΟΞΏΟ‚ Ο„Ξ± Ο€Ξ¬Ξ½Ο‰
+    //ΞΊΞ―Ξ½Ξ·ΟƒΞ· Ο€ΟΞΏΟ‚ Ο„Ξ± Ξ±ΟΞΉΟƒΟ„ΞµΟΞ¬
+    }else if(dice==7 ){
+    setX(getX()-1);
+   next_tile--;//Ο€Ξ·Ξ³Ξ±Ξ―Ξ½ΞµΞΉ ΟƒΟ„ΞΏ Ξ΄ΞΉΟ€Ξ»Ξ±Ξ½Ο Ξ±Ο€ΞΏ Ο„Ξ± Ξ±ΟΞΉΟƒΟ„ΞµΟΞ¬
+    }
+    
+    if(this.playerId==1) {
 		for(int s=0; s < board.getS(); s++) {
 			  if(board.supplies[s].getSupplyTileId() == next_tile) {
 			     board.supplies[s].setX(0);
@@ -141,49 +139,10 @@ public int[] move(int id, int dice) {
 			     this.score++;
 			  }
 		     }
-	 }
-    }else if(dice==3 && board.getTiles()[tile].isRight() == true) {
-    	System.out.println(name+" cannot move");	
-    // για κίνηση προς τα κάτω
-    //όμοια λογική με την κίνηση προς τα πάνω
-	}else if(dice==5 && board.tiles[tile].isDown() == false){
-	setY(getY()-1);
-	next_tile=next_tile-board.getN();// πάει στο  απο κάτω πλακάκι
-	if(id==1) {
-		for(int s=0; s < board.getS(); s++) {
-			  if(board.supplies[s].getSupplyTileId() == next_tile) {
-			     board.supplies[s].setX(0);
-			     board.supplies[s].setY(0);
-			     board.supplies[s].setSupplyTileId(-1);
-			     System.out.println(name+" took a prize"+s);
-			     play[3] = board.supplies[s].getSupplyId() ;
-			  }
-		     }
-	}
-    }else if(dice==5 && board.getTiles()[tile].isDown() == true) {
-    	System.out.println(name+" cannot move");
-    //όμοια λογική με την κίνηση προς τα πάνω
-    //κίνηση προς τα αριστερά
-    }else if(dice==7 && board.tiles[tile].isLeft() == false){
-    setX(getX()-1);
-   next_tile--;//πηγαίνει στο διπλανό απο τα αριστερά
-    if(id==1) {
-		for(int s=0; s < board.getS(); s++) {
-			  if(board.supplies[s].getSupplyTileId() == next_tile) {
-			     board.supplies[s].setX(0);
-			     board.supplies[s].setY(0);
-			     board.supplies[s].setSupplyTileId(-1);
-			     System.out.println(name+" took a prize"+s);
-			     play[3] = board.supplies[s].getSupplyId() ;
-			  }//an exei efodio mhdenizete kai pairnei to efodio
-		     }
     }
-  }else if(dice==7 && board.getTiles()[tile].isLeft() == true) {	 
-	  System.out.println(name+" cannot move");
-			}
-	play[0]=next_tile;// νέο-τελικό πλακάκι κίνησης 
-	play[1]= getX();// νέα- τελική συντεραγμένη x κίνησης .
-	play[2] = getY();// νέα- τελική συντεραγμένη y κίνησης .
+	play[0]=next_tile;// Ξ½Ξ­ΞΏ-Ο„ΞµΞ»ΞΉΞΊΟ Ο€Ξ»Ξ±ΞΊΞ¬ΞΊΞΉ ΞΊΞ―Ξ½Ξ·ΟƒΞ·Ο‚ 
+	play[1]= getX();// Ξ½Ξ­Ξ±- Ο„ΞµΞ»ΞΉΞΊΞ® ΟƒΟ…Ξ½Ο„ΞµΟΞ±Ξ³ΞΌΞ­Ξ½Ξ· x ΞΊΞ―Ξ½Ξ·ΟƒΞ·Ο‚ .
+	play[2] = getY();// Ξ½Ξ­Ξ±- Ο„ΞµΞ»ΞΉΞΊΞ® ΟƒΟ…Ξ½Ο„ΞµΟΞ±Ξ³ΞΌΞ­Ξ½Ξ· y ΞΊΞ―Ξ½Ξ·ΟƒΞ·Ο‚ .
 	play[3] = dice;
 	return play ;
 }
